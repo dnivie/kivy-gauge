@@ -1,0 +1,14 @@
+FROM python:3.11
+
+#RUN apt-get -y update
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+#RUN apt install -y libgl1-mesa-dev libgles2-mesa-dev zlib1g-dev
+
+RUN mkdir -p app
+
+COPY ./src app
+
+CMD ["python3","app/kivy_test.py"]
