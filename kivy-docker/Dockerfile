@@ -7,7 +7,10 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     python3-dev \
     build-essential \
+    mesa-utils \
     libgl1-mesa-glx \
+    libgl1-mesa-dri \
+    libglu1-mesa \
     libgles2-mesa \
     x11-xserver-utils \
     libx11-dev \
@@ -16,7 +19,11 @@ RUN apt-get update && apt-get install -y \
     sudo
 
 # Step 3: Install Kivy
-RUN pip3 install Cython==0.29.21 kivy==2.3.0 kivy-examples==2.3.0 kivy-garden==0.1.5
+#RUN pip3 install Cython==0.29.21 kivy==2.3.0 kivy-examples==2.3.0 kivy-garden==0.1.5
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
 
 # Step 4: Create a directory for the app
 WORKDIR /usr/src/app
@@ -27,6 +34,8 @@ COPY ./src /usr/src/app
 # Step 6: Set environment variables for display and X11 forwarding
 ENV DISPLAY=:0
 ENV PYTHONUNBUFFERED=1
+
+CMD ["glxinfo", "|", "grep", "OpenGL version"]
 
 # Step 7: Run the Kivy app
 CMD ["python3", "kivy_test.py"]
